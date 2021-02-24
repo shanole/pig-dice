@@ -1,28 +1,40 @@
 function Player() {
   this.score = 0;
   this.lastRoll;
+  this.turnScore = 0;
   this.turn = true;
 }
 
 Player.prototype.hold = function() {
   this.turn = false;
+  this.score += this.turnScore;
+  console.log("Total score: " + this.score);
 }
 
 Player.prototype.roll = function() {
   let currentRoll = Math.floor(Math.random() * 6)+1;
   this.lastRoll = currentRoll;
   if (currentRoll === 1) {
-    this.hold();
+    this.turnScore = 0;
   }
   else {
-    this.score += currentRoll;
+    this.turnScore += currentRoll;
   }
+  console.log("Just rolled a "+ currentRoll);
+  console.log("Turn score: " + this.turnScore);
 }
 
 let playerOne = new Player();
 let playerTwo = new Player();
 
-function playerRoll(player1, player2) {
+function playerSwitch(firstPlayer,secondPlayer) {
+  if (firstPlayer.turn === false) {
+    secondPlayer.turn = true;
+    firstPlayer.turn = false;
+  }
+}
+
+function playerTurn(player1, player2) {
   if (player1.turn === true && player2.turn === false) {
     player1.roll();
     if (player1.turn === false) {
@@ -50,7 +62,7 @@ function declareWinner(player1,player2) {
 
 let testPlayer = new Player();
 let testPlayer2 = new Player();
-testPlayer2.hold();
+testPlayer2.turn = false;
 
-playerRoll(testPlayer,testPlayer2);
-declareWinner(testPlayer,testPlayer2);
+// playerRoll(testPlayer,testPlayer2);
+// declareWinner(testPlayer,testPlayer2);
