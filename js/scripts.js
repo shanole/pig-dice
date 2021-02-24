@@ -8,60 +8,82 @@ function Player() {
 }
 
 Player.prototype.hold = function() {
-  // this.turn = false;
-  this.score += this.turnScore;
-  console.log("Total score: " + this.score);
+  if (this.turn) {
+    this.turn = false;
+    this.score += this.turnScore;
+  }
+  else {
+    return undefined;
+  }
 }
 
 Player.prototype.roll = function() {
-  let currentRoll = Math.floor(Math.random() * 6)+1;
-  this.lastRoll = currentRoll;
-  if (currentRoll === 1) {
-    this.turnScore = 0;
+  if (this.turn) {
+    let currentRoll = Math.floor(Math.random() * 6)+1;
+    this.lastRoll = currentRoll;
+    if (currentRoll === 1) {
+      this.turnScore = 0;
+      this.turn = false;
+    }
+    else {
+      this.turnScore += currentRoll;
+    }
   }
   else {
-    this.turnScore += currentRoll;
+    return undefined;
   }
-  console.log("Just rolled a "+ currentRoll);
-  console.log("Turn score: " + this.turnScore);
 }
 
-// function playerTurn(player1, player2) {
-//   if (player1.turn === true && player2.turn === false) {
-//     player1.roll();
-//   }
-//   else if (player1.turn === false && player2.turn === true) {
-//     player2.roll();
-//     if (player2.turn === false) {
-//       player1.turn = true;
-//     }
-//   }
-//   return [player1.score, player2.score];
-// }
-
 // User-interface logic ----------
+
+let playerOne = new Player();
+let playerTwo = new Player();
+playerTwo.turn = false;
 
 function playerSwitch(firstPlayer,secondPlayer) {
   if (firstPlayer.turn === false) {
     secondPlayer.turn = true;
-    firstPlayer.turn = false;
   }
 }
 
-function declareWinner(player1,player2) {
-  let currentResults = [player1.score, player2.score];
-  if (currentResults[0] >= 100) {
-    return "Player one is the winner!"
-  }
-  if (currentResults[1] >= 100) {
-    return "Player two is the winner!"
+function isWinner(player) {
+  if (player.score >= 100) {
+    return true;
   }
 }
-
-let testPlayer = new Player();
-let testPlayer2 = new Player();
-testPlayer2.turn = false;
 
 $(document).ready(function() {
-
+  $("#card").onClick(function(event)) {
+    playerOne.roll();
+    playerSwitch(playerOne,playerTwo);
+  }
 })
+
+
+
+// Shannon thinking out what may happen when you hit the ROLL button ------------
+playerOne.roll();
+if (playerOne.roll() === undefined) {
+  // ERROR it not ur turn
+}
+else {
+  // Display your roll, turn score, and total score;
+  if (isWinner(playerOne)) {
+    // Declare Player One as the winner and stop the game!
+  }
+  // Will switch player if 1 is hit, otherwise this does nothing
+  playerSwitch(playerOne,playerTwo);
+}
+
+// Shannon thinking through how the hold button may work ------------
+playerOne.hold();
+if (playerOne.roll() === undefined) {
+  // ERROR it not ur turn
+}
+else {
+  // Display your roll, turn score, and total score;
+  if (isWinner(playerOne)) {
+    // Declare Player One as the winner and stop the game!
+  }
+  playerSwitch(playerOne,playerTwo)
+}
