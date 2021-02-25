@@ -12,9 +12,10 @@ Player.prototype.hold = function() {
   if (this.turn) {
     this.turn = false;
     this.score += this.turnScore;
+    this.turnScore = 0;
   }
   else {
-    return undefined;
+    return "no";
   }
 }
 
@@ -29,9 +30,10 @@ Player.prototype.roll = function() {
     else {
       this.turnScore += currentRoll;
     }
+    return currentRoll;
   }
   else {
-    return undefined;
+    return "no";
   }
 }
 
@@ -52,6 +54,13 @@ function isWinner(player) {
   }
 }
 
+function showResults(id, player) {
+  let playerId = id;
+  $("#"+ playerId + ".current").text(player.lastRoll);
+  $("#"+ playerId + ".turn-score").text(player.turnScore);
+  $("#"+ playerId + ".total").text(player.score);
+}
+
 let playerOne = new Player(1);
 let playerTwo = new Player(2);
 playerTwo.turn = false;
@@ -60,49 +69,50 @@ $(document).ready(function() {
   $(".roll").click(function() {
     let id = $(this).attr('id');
     let player;
+    let opponent;
     if (id === "1") {
-      player = playerOne;    }
+      player = playerOne;
+      opponent = playerTwo;    
+    }
     else if (id === "2") {
       player = playerTwo;
+      opponent = playerOne;
     }
     player.roll();
+    showResults(id,player);
+    playerSwitch(player,opponent);
+    if (player.roll() === "no") {
+      alert("Please wait your turn!");
+    }
+    else {
+      if (isWinner(player)) {
+        // Declare Player One as the winner and stop the game!
+      };
+    };
   });
 
   $(".hold").click(function() {
     let id = $(this).attr('id');
     let player;
     if (id === "1") {
-      player = playerOne;    }
+      player = playerOne;
+      opponent = playerTwo;    
+    }
     else if (id === "2") {
       player = playerTwo;
+      opponent = playerOne;
     }
     player.hold();
+    showResults(id,player);
+    playerSwitch(player,opponent);
+    if (player.hold() === "no") {
+      alert("Please wait your turn!");
+    }
+    else {
+       if (isWinner(player)) {
+        // Declare Player One as the winner and stop the game!
+      }
+    }
   });
-})
+});
 
-// // Shannon thinking out what may happen when you hit the ROLL button ------------
-// playerOne.roll();
-// if (playerOne.roll() === undefined) {
-//   alert()
-// }
-// else {
-//   // Display your roll, turn score, and total score;
-//   if (isWinner(playerOne)) {
-//     // Declare Player One as the winner and stop the game!
-//   }
-//   // Will switch player if 1 is hit, otherwise this does nothing
-//   playerSwitch(playerOne,playerTwo);
-// }
-
-// // Shannon thinking out what may happen when you hit the HOLD button ------------
-// playerOne.hold();
-// if (playerOne.roll() === undefined) {
-//   // ERROR it not ur turn
-// }
-// else {
-//   // Display your roll, turn score, and total score;
-//   if (isWinner(playerOne)) {
-//     // Declare Player One as the winner and stop the game!
-//   }
-//   playerSwitch(playerOne,playerTwo);
-// }
