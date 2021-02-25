@@ -50,16 +50,22 @@ function isWinner(player) {
   if (player.score >= 100) {
     return true;
   }
+  else {
+    return false;
+  }
 }
 
 $(document).ready(function() {
-  $("#card").onClick(function(event)) {
-    playerOne.roll();
-    playerSwitch(playerOne,playerTwo);
-  }
+  $(".roll").click(function() {
+    let id = $(this).attr('id');
+    alert(id);
+  });
+
+  $(".hold").click(function() {
+    let id = $(this).attr('id');
+    alert(id);
+  });
 })
-
-
 
 // Shannon thinking out what may happen when you hit the ROLL button ------------
 playerOne.roll();
@@ -75,7 +81,7 @@ else {
   playerSwitch(playerOne,playerTwo);
 }
 
-// Shannon thinking through how the hold button may work ------------
+// Shannon thinking out what may happen when you hit the HOLD button ------------
 playerOne.hold();
 if (playerOne.roll() === undefined) {
   // ERROR it not ur turn
@@ -85,5 +91,5 @@ else {
   if (isWinner(playerOne)) {
     // Declare Player One as the winner and stop the game!
   }
-  playerSwitch(playerOne,playerTwo)
+  playerSwitch(playerOne,playerTwo);
 }
