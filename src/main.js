@@ -1,65 +1,9 @@
-// Business logic for Pig Dice ------ 
-
-function Player(num) {
-  this.score = 0;
-  this.lastRoll;
-  this.turnScore = 0;
-  this.turn = true;
-  this.id = num;
-}
-
-Player.prototype.hold = function() {
-  if (this.turn) {
-    this.turn = false;
-    this.score += this.turnScore;
-    this.turnScore = 0;
-  }
-  else {
-    return "no";
-  }
-}
-
-Player.prototype.roll = function() {
-  if (this.turn) {
-    let currentRoll = Math.floor(Math.random() * 6)+1;
-    this.lastRoll = currentRoll;
-    if (currentRoll === 1) {
-      this.turnScore = 0;
-      this.turn = false;
-    }
-    else {
-      this.turnScore += currentRoll;
-    }
-    return currentRoll;
-  }
-  else {
-    return "no";
-  }
-}
-
-// User-interface logic ----------
-
-function playerSwitch(firstPlayer,secondPlayer) {
-  if (firstPlayer.turn === false) {
-    secondPlayer.turn = true;
-  }
-}
-
-function isWinner(player) {
-  if (player.score >= 100) {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-function showResults(id, player) {
-  let playerId = id;
-  $("#"+ playerId + ".current").text(player.lastRoll);
-  $("#"+ playerId + ".turn-score").text(player.turnScore);
-  $("#"+ playerId + ".total").text(player.score);
-}
+import $ from 'jquery';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/styles.css';
+import Player from './js/player.js';
+import { playerSwitch, isWinner, showResults } from './js/game.js';
 
 let playerOne = new Player(1);
 let playerTwo = new Player(2);
@@ -110,7 +54,7 @@ $(document).ready(function() {
       alert("Please wait your turn!");
     }
     else {
-       if (isWinner(player)) {
+      if (isWinner(player)) {
         // Declare Player One as the winner and stop the game!
       }
     }
